@@ -68,6 +68,9 @@ interface PlanStore {
   completedChecklist: boolean[]
   weeklyChecklistCompletion: { [dayName: string]: boolean[] }
   resetTime: "00:00" | "06:00"
+  autoRegenerateDay: number // 0 = Sunday, 1 = Monday, etc.
+  autoRegenerateTime: string // HH:mm format
+  userNotes: string
 
   setUserProfile: (profile: UserProfile) => void
   setGoals: (goals: string) => void
@@ -86,7 +89,11 @@ interface PlanStore {
   toggleWeeklyChecklistItem: (dayName: string, index: number) => void
   addToHistory: (plan: DailyPlan, completed: boolean[]) => void
   checkAndRegeneratePlan: () => boolean
+  regenerateWeeklyPlan: () => Promise<void>
   setResetTime: (time: "00:00" | "06:00") => void
+  setAutoRegenerateDay: (day: number) => void
+  setAutoRegenerateTime: (time: string) => void
+  setUserNotes: (notes: string) => void
   clearAllData: () => void
 }
 
@@ -104,6 +111,9 @@ export const usePlanStore = create<PlanStore>()(
       completedChecklist: [],
       weeklyChecklistCompletion: {},
       resetTime: "06:00",
+      autoRegenerateDay: 0, // Sunday
+      autoRegenerateTime: "06:00",
+      userNotes: "",
 
       setUserProfile: (profile) => set({ userProfile: profile }),
 
@@ -202,32 +212,74 @@ export const usePlanStore = create<PlanStore>()(
 
       checkAndRegeneratePlan: () => {
         const state = get()
-        if (!state.lastGenerated) return true
+        if (!state.lastGenerated || !state.goals) return false
 
-        const lastGen = new Date(state.lastGenerated)
         const now = new Date()
-        const resetHour = Number.parseInt(state.resetTime.split(":")[0])
+        const lastGenDate = new Date(state.lastGenerated)
 
-        const lastResetTime = new Date(lastGen)
-        lastResetTime.setHours(resetHour, 0, 0, 0)
-        if (lastGen < lastResetTime) {
-          lastResetTime.setDate(lastResetTime.getDate() - 1)
-        }
+        // Find the last time the regeneration should have occurred
+        const lastScheduledRegen = new Date(now)
+        const [hours, minutes] = state.autoRegenerateTime.split(":").map(Number)
+        lastScheduledRegen.setHours(hours, minutes, 0, 0)
 
-        const nextResetTime = new Date(lastResetTime)
-        nextResetTime.setDate(nextResetTime.getDate() + 1)
+        const currentDay = now.getDay() // 0=Sun, 1=Mon...
+        const daysToSubtract = (currentDay - state.autoRegenerateDay + 7) % 7
+        lastScheduledRegen.setDate(lastScheduledRegen.getDate() - daysToSubtract)
 
-        if (now >= nextResetTime) {
-          if (state.currentPlan) {
-            get().addToHistory(state.currentPlan, state.completedChecklist)
-          }
+        // If the last generation was before the last scheduled regeneration time,
+        // and the current time is after it, then it's time to regenerate.
+        if (lastGenDate < lastScheduledRegen && now >= lastScheduledRegen) {
           return true
         }
 
         return false
       },
 
+      regenerateWeeklyPlan: async () => {
+        const { goals, userNotes, setWeeklyPlan, setGroceryList, setLastGenerated } = get()
+        if (!goals) {
+          console.log("No goals set, skipping regeneration.")
+          return
+        }
+
+        console.log("Regenerating weekly plan automatically...")
+        try {
+          const result = await (await import("@/app/actions/generate-plan")).generateWeeklyPlan(goals, userNotes) // No special events for auto-regen
+          if (result.success && result.plan) {
+            const { groceryList, ...weekDays } = result.plan
+            const startDate = new Date()
+            startDate.setDate(startDate.getDate() - ((startDate.getDay() + 6) % 7))
+
+            setWeeklyPlan({
+              startDate: startDate.toISOString(),
+              days: weekDays as any,
+            })
+
+            const groceryItems = groceryList.map((item: any, index: number) => ({
+              id: `grocery-${index}`,
+              name: item.name,
+              category: item.category,
+              purchased: false,
+            }))
+            setGroceryList(groceryItems)
+
+            setLastGenerated(new Date().toISOString())
+            console.log("Weekly plan regenerated successfully.")
+          } else {
+            console.error("Regeneration failed:", result.error)
+          }
+        } catch (error) {
+          console.error("An unexpected error occurred during regeneration:", error)
+        }
+      },
+
       setResetTime: (time) => set({ resetTime: time }),
+
+      setAutoRegenerateDay: (day) => set({ autoRegenerateDay: day }),
+
+      setAutoRegenerateTime: (time) => set({ autoRegenerateTime: time }),
+
+      setUserNotes: (notes) => set({ userNotes: notes }),
 
       clearAllData: () =>
         set({
@@ -241,10 +293,19 @@ export const usePlanStore = create<PlanStore>()(
           history: [],
           completedChecklist: [],
           weeklyChecklistCompletion: {},
+          userNotes: "",
         }),
     }),
     {
       name: "kaio-plan-storage",
+      getStorage: () =>
+        typeof window !== "undefined"
+          ? localStorage
+          : {
+              getItem: () => null,
+              setItem: () => undefined,
+              removeItem: () => undefined,
+            },
     },
   ),
 )

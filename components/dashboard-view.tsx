@@ -36,13 +36,18 @@ export default function DashboardView() {
     weeklyChecklistCompletion,
     toggleWeeklyChecklistItem,
     goals,
+    setGoals,
     setWeeklyPlan,
     setGroceryList,
     setLastGenerated,
+    userNotes,
+    setUserNotes,
   } = usePlanStore()
   const [isRegenerating, setIsRegenerating] = useState(false)
   const [showEventInput, setShowEventInput] = useState(false)
   const [eventText, setEventText] = useState("")
+  const [showGoalsInput, setShowGoalsInput] = useState(false)
+  const [goalsText, setGoalsText] = useState(userNotes)
   const { toast } = useToast()
 
   const handleRegenerate = async () => {
@@ -155,6 +160,62 @@ export default function DashboardView() {
     }
   }
 
+  const handleUpdateGoals = async () => {
+    if (!goalsText.trim()) {
+      toast({
+        title: "Please enter your goals",
+        description: "Describe what you want to achieve.",
+        variant: "destructive",
+      })
+      return
+    }
+
+    setIsRegenerating(true)
+    try {
+      setUserNotes(goalsText)
+      const result = await generateWeeklyPlan(goals, goalsText)
+      if (result.success && result.plan) {
+        const { groceryList, ...weekDays } = result.plan
+        const startDate = new Date()
+        startDate.setDate(startDate.getDate() - ((startDate.getDay() + 6) % 7))
+
+        setWeeklyPlan({
+          startDate: startDate.toISOString(),
+          days: weekDays as any,
+        })
+
+        const groceryItems = groceryList.map((item: any, index: number) => ({
+          id: `grocery-${index}`,
+          name: item.name,
+          category: item.category,
+          purchased: false,
+        }))
+        setGroceryList(groceryItems)
+
+        setLastGenerated(new Date().toISOString())
+        setShowGoalsInput(false)
+        toast({
+          title: "Goals updated!",
+          description: "Your weekly plan has been regenerated with your new goals.",
+        })
+      } else {
+        toast({
+          title: "Update failed",
+          description: result.error || "Failed to update goals.",
+          variant: "destructive",
+        })
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred.",
+        variant: "destructive",
+      })
+    } finally {
+      setIsRegenerating(false)
+    }
+  }
+
   if (!weeklyPlan) {
     return (
       <div className="min-h-screen flex items-center justify-center p-6">
@@ -235,6 +296,10 @@ export default function DashboardView() {
             </div>
           </div>
           <div className="flex gap-2">
+            <Button onClick={() => setShowGoalsInput(!showGoalsInput)} variant="outline" size="sm">
+              <Target className="w-4 h-4" />
+              Update Goals
+            </Button>
             <Button onClick={() => setShowEventInput(!showEventInput)} variant="outline" size="sm">
               <Calendar className="w-4 h-4" />
               Adjust for Event
@@ -246,6 +311,40 @@ export default function DashboardView() {
           </div>
         </div>
       </motion.div>
+
+      {/* Goals Input */}
+      {showGoalsInput && (
+        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
+          <Card className="p-6">
+            <h3 className="font-semibold mb-3">Update Your Goals</h3>
+            <p className="text-sm text-muted-foreground mb-4">
+              What new skills do you want to master? What new habits do you want to build? Your plan will be updated
+              to reflect these new goals.
+            </p>
+            <Textarea
+              value={goalsText}
+              onChange={(e) => setGoalsText(e.target.value)}
+              placeholder="e.g., I'm going to learn how to cook a new healthy meal every week..."
+              className="mb-4"
+            />
+            <div className="flex gap-2">
+              <Button onClick={handleUpdateGoals} disabled={isRegenerating}>
+                {isRegenerating && showGoalsInput ? (
+                  <>
+                    <RefreshCw className="w-4 h-4 animate-spin" />
+                    Updating...
+                  </>
+                ) : (
+                  "Update Goals & Regenerate Plan"
+                )}
+              </Button>
+              <Button onClick={() => setShowGoalsInput(false)} variant="outline">
+                Cancel
+              </Button>
+            </div>
+          </Card>
+        </motion.div>
+      )}
 
       {/* Event Input */}
       {showEventInput && (
@@ -482,7 +581,7 @@ export default function DashboardView() {
                   transition={{ delay: 0.7 + index * 0.1 }}
                   className="flex items-start gap-2 text-foreground"
                 >
-                  <span className="text-primary mt-1">•</span>
+                  <span className="text-primary mt-1"> •</span>
                   <span>{tip}</span>
                 </motion.li>
               ))}

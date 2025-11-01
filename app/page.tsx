@@ -16,15 +16,18 @@ export default function Home() {
   const [activeView, setActiveView] = useState<"dashboard" | "goals" | "grocery" | "history" | "settings" | "about">(
     "dashboard",
   )
-  const { checkAndRegeneratePlan } = usePlanStore()
+  const { checkAndRegeneratePlan, regenerateWeeklyPlan } = usePlanStore()
 
   useEffect(() => {
-    checkAndRegeneratePlan()
-    const interval = setInterval(() => {
-      checkAndRegeneratePlan()
-    }, 60000)
+    const check = () => {
+      if (checkAndRegeneratePlan()) {
+        regenerateWeeklyPlan()
+      }
+    }
+    check()
+    const interval = setInterval(check, 60000)
     return () => clearInterval(interval)
-  }, [checkAndRegeneratePlan])
+  }, [checkAndRegeneratePlan, regenerateWeeklyPlan])
 
   const renderView = () => {
     const views = {

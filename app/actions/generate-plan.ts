@@ -55,8 +55,6 @@ export async function generateDailyPlan(goals: string) {
       headers: {
         Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
         "Content-Type": "application/json",
-        "HTTP-Referer": "https://evolve-with-kaio.vercel.app",
-        "X-Title": "Evolve with Kaio",
       },
       body: JSON.stringify({
         model: "openai/gpt-4o-mini",
@@ -194,7 +192,7 @@ CRITICAL: The "workout" field MUST be a single string with line breaks (\\n), NO
     }
   }
 }
-export async function generateWeeklyPlan(goals: string, specialEvents?: string) {
+export async function generateWeeklyPlan(goals: string, userNotes?: string) {
   if (!process.env.OPENROUTER_API_KEY) {
     console.error("[v0] OPENROUTER_API_KEY is not set")
     return {
@@ -209,15 +207,14 @@ export async function generateWeeklyPlan(goals: string, specialEvents?: string) 
   try {
     console.log("[v0] Calling OpenRouter API with model: openai/gpt-4o-mini")
 
-    const eventContext = specialEvents ? `\n\nSPECIAL EVENTS/MODIFICATIONS:\n${specialEvents}\n\nAdjust the plan for the specific days mentioned to accommodate these events while maintaining overall weekly goals.` : ""
+    const notesContext = userNotes ? `\n\nADDITIONAL NOTES/GOALS:\n${userNotes}\n\nIncorporate these notes into the plan.` : ""
 
     const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
         "Content-Type": "application/json",
-        "HTTP-Referer": "https://evolve-with-kaio.vercel.app",
-        "X-Title": "Evolve with Kaio",
+        
       },
       body: JSON.stringify({
         model: "openai/gpt-4o-mini",
@@ -231,7 +228,7 @@ export async function generateWeeklyPlan(goals: string, specialEvents?: string) 
             role: "user",
             content: `Based on the following user information, create a comprehensive, personalized WEEKLY plan (Monday through Sunday):
 
-${goals}${eventContext}
+${goals}${notesContext}
 
 Generate a detailed 7-day plan that includes for EACH DAY:
 1. Optimal wake time based on their schedule

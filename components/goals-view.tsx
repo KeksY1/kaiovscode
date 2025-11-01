@@ -139,7 +139,7 @@ export default function GoalsView() {
   const [questionnaireData, setQuestionnaireData] = useState<QuestionnaireData>(() => {
     // Try to parse existing goals if they exist
     try {
-      return goals ? JSON.parse(goals) : {}
+      return goals && goals.trim() !== '' ? JSON.parse(goals) : {}
     } catch {
       return {}
     }

@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Settings, Clock, Trash2, Moon, Sun, Monitor, AlertTriangle } from "lucide-react"
+import { Settings, Clock, Trash2, Moon, Sun, AlertTriangle } from "lucide-react"
 import { usePlanStore } from "@/lib/store"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -10,26 +10,28 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast"
 import { useTheme } from "next-themes"
 import { useState } from "react"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
 
 export default function SettingsView() {
-  const { resetTime, setResetTime, clearAllData } = usePlanStore()
+  const { autoRegenerateDay, autoRegenerateTime, setAutoRegenerateDay, setAutoRegenerateTime, clearAllData } = usePlanStore()
   const { toast } = useToast()
   const { theme, setTheme } = useTheme()
   const [showClearDialog, setShowClearDialog] = useState(false)
 
-  const handleResetTimeChange = (value: "00:00" | "06:00") => {
-    setResetTime(value)
+  const handleRegenDayChange = (value: string) => {
+    setAutoRegenerateDay(Number(value))
     toast({
-      title: "Reset time updated",
-      description: `Your daily plan will now reset at ${value === "00:00" ? "midnight" : "6:00 AM"}.`,
+      title: "Regeneration day updated",
+      description: `Your weekly plan will now regenerate on ${["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][Number(value)]}.`,
+    })
+  }
+
+  const handleRegenTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAutoRegenerateTime(e.target.value)
+    toast({
+      title: "Regeneration time updated",
+      description: `Your weekly plan will now regenerate at ${e.target.value}.`,
     })
   }
 
@@ -38,7 +40,7 @@ export default function SettingsView() {
     setShowClearDialog(false)
     toast({
       title: "Data cleared",
-      description: "All your goals, plans, and history have been deleted.",
+      description: "All your goals, weekly plans, and history have been deleted.",
     })
   }
 
@@ -66,7 +68,7 @@ export default function SettingsView() {
               <Label htmlFor="theme" className="mb-3 block">
                 Theme
               </Label>
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-2 gap-3">
                 <Button
                   variant={theme === "light" ? "default" : "outline"}
                   onClick={() => setTheme("light")}
@@ -83,14 +85,6 @@ export default function SettingsView() {
                   <Moon className="w-5 h-5" />
                   <span className="text-sm">Dark</span>
                 </Button>
-                <Button
-                  variant={theme === "system" ? "default" : "outline"}
-                  onClick={() => setTheme("system")}
-                  className="flex flex-col gap-2 h-auto py-4"
-                >
-                  <Monitor className="w-5 h-5" />
-                  <span className="text-sm">System</span>
-                </Button>
               </div>
             </div>
           </div>
@@ -103,31 +97,34 @@ export default function SettingsView() {
           <h2 className="text-xl font-bold mb-4 text-foreground">Plan Settings</h2>
           <div className="space-y-4">
             <div>
-              <Label htmlFor="reset-time" className="mb-3 block">
-                Daily Reset Time
+              <Label htmlFor="regen-day" className="mb-3 block">
+                Weekly Regeneration
               </Label>
               <p className="text-sm text-muted-foreground mb-3">
-                Choose when your daily plan should automatically regenerate
+                Choose when your weekly plan should automatically regenerate.
               </p>
-              <Select value={resetTime} onValueChange={handleResetTimeChange}>
-                <SelectTrigger id="reset-time" className="w-full">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="00:00">
-                    <div className="flex items-center gap-2">
-                      <Clock className="w-4 h-4" />
-                      <span>Midnight (12:00 AM)</span>
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="06:00">
-                    <div className="flex items-center gap-2">
-                      <Clock className="w-4 h-4" />
-                      <span>Morning (6:00 AM)</span>
-                    </div>
-                  </SelectItem>
-                </SelectContent>
-              </Select>
+              <div className="grid grid-cols-2 gap-4">
+                <Select value={String(autoRegenerateDay)} onValueChange={handleRegenDayChange}>
+                  <SelectTrigger id="regen-day">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="0">Sunday</SelectItem>
+                    <SelectItem value="1">Monday</SelectItem>
+                    <SelectItem value="2">Tuesday</SelectItem>
+                    <SelectItem value="3">Wednesday</SelectItem>
+                    <SelectItem value="4">Thursday</SelectItem>
+                    <SelectItem value="5">Friday</SelectItem>
+                    <SelectItem value="6">Saturday</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Input
+                  id="regen-time"
+                  type="time"
+                  value={autoRegenerateTime}
+                  onChange={handleRegenTimeChange}
+                />
+              </div>
             </div>
           </div>
         </Card>
@@ -143,7 +140,7 @@ export default function SettingsView() {
               <div className="flex-1">
                 <h3 className="font-semibold text-foreground mb-1">Clear All Data</h3>
                 <p className="text-sm text-muted-foreground mb-3">
-                  This will permanently delete all your goals, plans, and history. This action cannot be undone.
+                  This will permanently delete all your goals, weekly plans, and history. This action cannot be undone.
                 </p>
                 <Button variant="destructive" onClick={() => setShowClearDialog(true)}>
                   <Trash2 className="w-4 h-4" />
@@ -155,13 +152,15 @@ export default function SettingsView() {
         </Card>
       </motion.div>
 
+
+
       {/* Clear Data Confirmation Dialog */}
       <Dialog open={showClearDialog} onOpenChange={setShowClearDialog}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Are you absolutely sure?</DialogTitle>
             <DialogDescription>
-              This action cannot be undone. This will permanently delete all your goals, daily plans, and history from
+              This action cannot be undone. This will permanently delete all your goals, weekly plans, and history from
               your device.
             </DialogDescription>
           </DialogHeader>
