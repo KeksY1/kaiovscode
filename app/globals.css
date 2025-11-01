@@ -83,7 +83,7 @@
   /* Light mode colors */
   --color-background: oklch(98% 0.01 280);
   --color-foreground: oklch(15% 0.02 270);
-  --color-surface: oklch(85% 0.30 275);
+  --color-surface: oklch(0% 0 0);
   --color-surface-secondary: oklch(78% 0.28 270);
   --color-border: oklch(88% 0.015 280);
   --color-primary: oklch(55% 0.20 264);
