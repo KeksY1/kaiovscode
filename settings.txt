@@ -1,0 +1,4 @@
+root: C:\Users\Yonat\Downloads\kaioreplit\fullkaio\kaiovscode-1 
+path: C:\Program Files\nodejs 
+arch: 64 
+proxy: none
