@@ -1,11 +1,27 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import { Home, Target, Calendar, Settings, Info, Sparkles, ShoppingCart } from "lucide-react"
+import { motion } from "framer-motion";
+import {
+  Home,
+  Target,
+  Calendar,
+  Settings,
+  Info,
+  Sparkles,
+  ShoppingCart,
+} from "lucide-react";
 
 interface SideNavProps {
-  activeView: "dashboard" | "goals" | "grocery" | "history" | "settings" | "about"
-  onViewChange: (view: "dashboard" | "goals" | "grocery" | "history" | "settings" | "about") => void
+  activeView:
+    | "dashboard"
+    | "goals"
+    | "grocery"
+    | "history"
+    | "settings"
+    | "about";
+  onViewChange: (
+    view: "dashboard" | "goals" | "grocery" | "history" | "settings" | "about",
+  ) => void;
 }
 
 export default function SideNav({ activeView, onViewChange }: SideNavProps) {
@@ -16,10 +32,10 @@ export default function SideNav({ activeView, onViewChange }: SideNavProps) {
     { id: "history" as const, icon: Calendar, label: "History" },
     { id: "settings" as const, icon: Settings, label: "Settings" },
     { id: "about" as const, icon: Info, label: "About" },
-  ]
+  ];
 
   return (
-    <nav className="fixed left-0 top-0 h-screen w-64 bg-[#D4C5F9] dark:bg-[#1F1F1F] border-r border-border z-50 flex flex-col">
+    <nav className="fixed left-0 top-0 h-screen w-64 bg-[#D4C5F9] dark:bg-[#171717] border-r border-border z-50 flex flex-col">
       {/* Logo */}
       <div className="p-6 border-b border-border">
         <div className="flex items-center gap-3">
@@ -36,8 +52,8 @@ export default function SideNav({ activeView, onViewChange }: SideNavProps) {
       {/* Navigation Items */}
       <div className="flex-1 p-4 space-y-2">
         {navItems.map((item) => {
-          const Icon = item.icon
-          const isActive = activeView === item.id
+          const Icon = item.icon;
+          const isActive = activeView === item.id;
 
           return (
             <button
@@ -59,14 +75,16 @@ export default function SideNav({ activeView, onViewChange }: SideNavProps) {
               <Icon className="w-5 h-5" />
               <span className="font-medium">{item.label}</span>
             </button>
-          )
+          );
         })}
       </div>
 
       {/* Footer */}
       <div className="p-6 border-t border-border">
-        <p className="text-xs text-muted-foreground text-center">© 2025 Kaio v1.0.0</p>
+        <p className="text-xs text-muted-foreground text-center">
+          © 2025 Kaio v1.0.0
+        </p>
       </div>
     </nav>
-  )
+  );
 }
