@@ -19,7 +19,7 @@ export default function SideNav({ activeView, onViewChange }: SideNavProps) {
   ]
 
   return (
-    <nav className="fixed left-0 top-0 h-screen w-64 bg-[#D4C5F9] dark:bg-[#3D3D3D] border-r border-border z-50 flex flex-col">
+    <nav className="fixed left-0 top-0 h-screen w-64 bg-[#D4C5F9] dark:bg-[#1F1F1F] border-r border-border z-50 flex flex-col">
       {/* Logo */}
       <div className="p-6 border-b border-border">
         <div className="flex items-center gap-3">
