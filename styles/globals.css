@@ -5,9 +5,9 @@
 
 :root {
   --background: oklch(96% 0.04 285);
-  --foreground: oklch(20% 0.04 270);
+  --foreground: oklch(35% 0.12 270);
   --card: oklch(92% 0.10 275);
-  --card-foreground: oklch(20% 0.04 270);
+  --card-foreground: oklch(35% 0.12 270);
   --popover: oklch(99% 0.02 275);
   --popover-foreground: oklch(20% 0.04 270);
   --primary: oklch(60% 0.24 264);

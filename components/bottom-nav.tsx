@@ -18,7 +18,7 @@ export default function BottomNav({ activeView, onViewChange }: BottomNavProps) 
   ]
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-sidebar/95 backdrop-blur-lg border-t border-border z-50 md:hidden">
+    <nav className="fixed bottom-0 left-0 right-0 bg-[#D4C5F9]/95 dark:bg-[#3D3D3D]/95 backdrop-blur-lg border-t border-border z-50 md:hidden">
       <div className="flex items-center justify-around px-2 py-2 safe-area-inset-bottom">
         {navItems.map((item) => {
           const Icon = item.icon
