@@ -26,6 +26,56 @@ import { Textarea } from "@/components/ui/textarea"
 
 const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 
+// ADDED: Helper function to generate AI affirmations based on completion rate
+const generateAffirmation = (completionRate: number): string => {
+  if (completionRate === 100) {
+    const messages = [
+      "🎉 Perfect! You crushed it today!",
+      "💪 Amazing! 100% completed!",
+      "🔥 Incredible effort! You're unstoppable!",
+      "⭐ Flawless execution! Keep it up!",
+      "🏆 Champion mindset! All tasks done!",
+    ]
+    return messages[Math.floor(Math.random() * messages.length)]
+  } else if (completionRate >= 75) {
+    const messages = [
+      "🌟 Excellent work! Almost perfect!",
+      "👏 Great job! You're so close!",
+      "💯 Outstanding effort! Keep pushing!",
+      "🚀 Very impressive! Nearly there!",
+      "✨ Fantastic day! Just a bit more!",
+    ]
+    return messages[Math.floor(Math.random() * messages.length)]
+  } else if (completionRate >= 50) {
+    const messages = [
+      "👍 Good effort! You're halfway there!",
+      "💪 Nice work! Keep improving!",
+      "🎯 Solid progress! More next time!",
+      "📈 You're on the right track!",
+      "🌱 Good foundation! Build on this!",
+    ]
+    return messages[Math.floor(Math.random() * messages.length)]
+  } else if (completionRate > 0) {
+    const messages = [
+      "💡 It's okay! Try better next time!",
+      "🌱 Small steps count! Don't give up!",
+      "⚡ You got this! Push harder tomorrow!",
+      "🎯 Every bit helps! Keep going!",
+      "🔄 Learn from today! Better luck ahead!",
+    ]
+    return messages[Math.floor(Math.random() * messages.length)]
+  } else {
+    const messages = [
+      "🌟 Tomorrow is a new day! You got this!",
+      "💪 Don't give up! Try better next day!",
+      "🚀 Reset and go again! You can do it!",
+      "⭐ Every day is a fresh start!",
+      "🔥 Come back stronger tomorrow!",
+    ]
+    return messages[Math.floor(Math.random() * messages.length)]
+  }
+}
+
 export default function DashboardView() {
   const {
     weeklyPlan,
@@ -42,6 +92,8 @@ export default function DashboardView() {
     setLastGenerated,
     userNotes,
     setUserNotes,
+    addToHistory,
+    /* ADDED: Added addToHistory to auto-save days */
   } = usePlanStore()
   const [isRegenerating, setIsRegenerating] = useState(false)
   const [showEventInput, setShowEventInput] = useState(false)
@@ -49,6 +101,26 @@ export default function DashboardView() {
   const [showGoalsInput, setShowGoalsInput] = useState(false)
   const [goalsText, setGoalsText] = useState(userNotes)
   const { toast } = useToast()
+
+  // ADDED: Wrapper for nextDay that auto-saves current day to history
+  const handleNextDay = () => {
+    if (weeklyPlan) {
+      const currentDayName = DAYS[currentDayIndex]
+      const currentPlan = weeklyPlan.days[currentDayName] as DailyPlan
+      const completedChecklist = weeklyChecklistCompletion[currentDayName] || []
+      const completionRate = (completedChecklist.filter(Boolean).length / currentPlan.checklist.length) * 100
+      const affirmation = generateAffirmation(completionRate)
+
+      // Save current day to history before moving to next day
+      addToHistory(currentPlan, completedChecklist, affirmation)
+    }
+    nextDay()
+  }
+
+  // ADDED: Wrapper for previousDay (optional: also save when going back)
+  const handlePreviousDay = () => {
+    previousDay()
+  }
 
   const handleRegenerate = async () => {
     if (!goals) {
@@ -384,14 +456,14 @@ export default function DashboardView() {
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
         <Card className="p-4">
           <div className="flex items-center justify-between">
-            <Button onClick={previousDay} variant="ghost" size="sm">
+            <Button onClick={handlePreviousDay} variant="ghost" size="sm">
               <ChevronLeft className="w-5 h-5" />
             </Button>
             <div className="flex items-center gap-2">
               <Calendar className="w-5 h-5 text-primary" />
               <h2 className="text-2xl font-bold text-foreground">{currentDayName}</h2>
             </div>
-            <Button onClick={nextDay} variant="ghost" size="sm">
+            <Button onClick={handleNextDay} variant="ghost" size="sm">
               <ChevronRight className="w-5 h-5" />
             </Button>
           </div>

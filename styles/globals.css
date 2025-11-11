@@ -40,7 +40,8 @@
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
+  --background: #fc0000;
+  /* CHANGED: Dark mode background to dark grey (#2a2a2a) */
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.145 0 0);
   --card-foreground: oklch(0.985 0 0);

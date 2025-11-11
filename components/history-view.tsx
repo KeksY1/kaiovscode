@@ -145,6 +145,11 @@ export default function HistoryView() {
                     className="border-t border-border"
                   >
                     <div className="p-6 space-y-4">
+                      {/* ADDED: Display AI-generated affirmation message */}
+                      <div className="p-4 bg-primary/10 rounded-lg border border-primary/20">
+                        <p className="text-lg font-semibold text-primary">{entry.affirmation}</p>
+                      </div>
+
                       {/* Checklist */}
                       <div>
                         <h4 className="font-semibold text-foreground mb-3">Checklist</h4>

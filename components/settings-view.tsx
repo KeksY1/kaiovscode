@@ -53,7 +53,7 @@ export default function SettingsView() {
             <Settings className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Settings</h1>
+            <h1 className="text-3xl font-bold text-[#ffffff] dark:text-foreground">Settings</h1>
             <p className="text-muted-foreground">Customize your experience</p>
           </div>
         </div>

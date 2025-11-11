@@ -249,7 +249,7 @@ export default function GoalsView() {
             <Target className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Tell Me About Yourself</h1>
+            <h1 className="text-3xl font-bold text-[#ffffff] dark:text-foreground">Tell Me About Yourself</h1>
             <p className="text-muted-foreground">Answer a few questions to personalize your plan</p>
           </div>
         </div>
@@ -265,7 +265,7 @@ export default function GoalsView() {
             {Math.round(((currentStep + 1) / visibleQuestions.length) * 100)}% Complete
           </span>
         </div>
-        <div className="h-2 bg-muted rounded-full overflow-hidden">
+        <div className="h-2 bg-white dark:bg-muted rounded-full overflow-hidden">
           <motion.div
             className="h-full bg-gradient-to-r from-primary to-accent"
             initial={{ width: 0 }}
@@ -273,9 +273,7 @@ export default function GoalsView() {
             transition={{ duration: 0.3 }}
           />
         </div>
-      </div>
-
-      {/* Question Card */}
+      </div>      {/* Question Card */}
       <AnimatePresence mode="wait">
         <motion.div
           key={currentStep}

@@ -38,6 +38,8 @@ export interface PlanHistory {
   date: string
   plan: DailyPlan
   completedChecklist: boolean[]
+  affirmation: string
+  /* CHANGED: Added affirmation field to store AI-generated motivational message */
 }
 
 export interface UserProfile {
@@ -87,7 +89,7 @@ interface PlanStore {
   setLastGenerated: (date: string) => void
   toggleChecklistItem: (index: number) => void
   toggleWeeklyChecklistItem: (dayName: string, index: number) => void
-  addToHistory: (plan: DailyPlan, completed: boolean[]) => void
+  addToHistory: (plan: DailyPlan, completed: boolean[], affirmation?: string) => void
   checkAndRegeneratePlan: () => boolean
   regenerateWeeklyPlan: () => Promise<void>
   setResetTime: (time: "00:00" | "06:00") => void
@@ -198,13 +200,15 @@ export const usePlanStore = create<PlanStore>()(
           }
         }),
 
-      addToHistory: (plan, completed) =>
+      addToHistory: (plan, completed, affirmation = "Keep it up!") =>
         set((state) => ({
           history: [
             {
               date: new Date().toISOString(),
               plan,
               completedChecklist: completed,
+              affirmation,
+              /* CHANGED: Added affirmation parameter to save AI message with history entry */
             },
             ...state.history,
           ].slice(0, 30),
