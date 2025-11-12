@@ -93,7 +93,8 @@ export default function DashboardView() {
     userNotes,
     setUserNotes,
     addToHistory,
-    /* ADDED: Added addToHistory to auto-save days */
+    updateTodayHistory,
+    /* ADDED: Added updateTodayHistory to update today's entry instead of creating duplicates */
   } = usePlanStore()
   const [isRegenerating, setIsRegenerating] = useState(false)
   const [showEventInput, setShowEventInput] = useState(false)
@@ -111,8 +112,8 @@ export default function DashboardView() {
       const completionRate = (completedChecklist.filter(Boolean).length / currentPlan.checklist.length) * 100
       const affirmation = generateAffirmation(completionRate)
 
-      // Save current day to history before moving to next day
-      addToHistory(currentPlan, completedChecklist, affirmation)
+      // Save current day to history before moving to next day, with dayName to prevent conflicts
+      addToHistory(currentPlan, completedChecklist, affirmation, currentDayName)
     }
     nextDay()
   }
@@ -120,6 +121,27 @@ export default function DashboardView() {
   // ADDED: Wrapper for previousDay (optional: also save when going back)
   const handlePreviousDay = () => {
     previousDay()
+  }
+
+  // ADDED: Auto-save current day to history whenever a checklist item is toggled
+  const handleToggleChecklistItem = (dayName: string, index: number) => {
+    if (weeklyPlan) {
+      const plan = weeklyPlan.days[dayName] as DailyPlan
+      const currentCompletion = weeklyChecklistCompletion[dayName] || []
+      
+      // Manually compute the updated completion array instead of relying on state
+      const updatedCompletion = [...currentCompletion]
+      updatedCompletion[index] = !updatedCompletion[index]
+      
+      const completionRate = (updatedCompletion.filter(Boolean).length / plan.checklist.length) * 100
+      const affirmation = generateAffirmation(completionRate)
+      
+      // Update history with the new completion state, passing dayName to differentiate days
+      updateTodayHistory(plan, updatedCompletion, affirmation, dayName)
+    }
+    
+    // Update the store state after saving to history
+    toggleWeeklyChecklistItem(dayName, index)
   }
 
   const handleRegenerate = async () => {
@@ -368,15 +390,15 @@ export default function DashboardView() {
             </div>
           </div>
           <div className="flex gap-2">
-            <Button onClick={() => setShowGoalsInput(!showGoalsInput)} variant="outline" size="sm">
+            <Button onClick={() => setShowGoalsInput(!showGoalsInput)} variant="outline" size="sm" className="bg-primary/10 border-primary/20 text-foreground hover:bg-primary/20 dark:bg-input/30 dark:border-input dark:text-muted-foreground dark:hover:bg-input/50">
               <Target className="w-4 h-4" />
               Update Goals
             </Button>
-            <Button onClick={() => setShowEventInput(!showEventInput)} variant="outline" size="sm">
+            <Button onClick={() => setShowEventInput(!showEventInput)} variant="outline" size="sm" className="bg-primary/10 border-primary/20 text-foreground hover:bg-primary/20 dark:bg-input/30 dark:border-input dark:text-muted-foreground dark:hover:bg-input/50">
               <Calendar className="w-4 h-4" />
               Adjust for Event
             </Button>
-            <Button onClick={handleRegenerate} disabled={isRegenerating} variant="outline" size="sm">
+            <Button onClick={handleRegenerate} disabled={isRegenerating} variant="outline" size="sm" className="bg-primary/10 border-primary/20 text-foreground hover:bg-primary/20 dark:bg-input/30 dark:border-input dark:text-muted-foreground dark:hover:bg-input/50">
               <RefreshCw className={`w-4 h-4 ${isRegenerating ? "animate-spin" : ""}`} />
               Regenerate
             </Button>
@@ -475,7 +497,7 @@ export default function DashboardView() {
                 className={`w-10 h-10 rounded-lg flex items-center justify-center text-sm font-medium transition-colors ${
                   index === currentDayIndex
                     ? "bg-primary text-white"
-                    : "bg-muted text-muted-foreground hover:bg-muted/80"
+                    : "bg-primary/10 text-foreground hover:bg-primary/20 dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted/80"
                 }`}
               >
                 {day.substring(0, 1)}
@@ -557,8 +579,8 @@ export default function DashboardView() {
               {currentPlan.checklist.map((item, index) => (
                 <motion.button
                   key={index}
-                  onClick={() => toggleWeeklyChecklistItem(currentDayName, index)}
-                  className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-surface-secondary transition-colors text-left"
+                  onClick={() => handleToggleChecklistItem(currentDayName, index)}
+                  className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-primary/5 dark:hover:bg-surface-secondary transition-colors text-left"
                   whileTap={{ scale: 0.98 }}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -605,7 +627,7 @@ export default function DashboardView() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.4 + index * 0.1 }}
-                className="border-l-4 border-primary pl-4 py-2 hover:bg-surface-secondary/50 transition-colors rounded-r-lg"
+                className="border-l-4 border-primary pl-4 py-2 hover:bg-primary/5 dark:hover:bg-surface-secondary/50 transition-colors rounded-r-lg"
               >
                 <h3 className="font-semibold text-foreground">{meal.name}</h3>
                 <p className="text-sm text-muted-foreground mb-1">{meal.details}</p>

@@ -1,16 +1,27 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Calendar, TrendingUp, CheckCircle2, Circle, ChevronDown, ChevronUp } from "lucide-react"
+import { Calendar, TrendingUp, CheckCircle2, Circle, ChevronDown, ChevronUp, Trash2 } from "lucide-react"
 import { usePlanStore } from "@/lib/store"
 import { Card } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
+import { Button } from "@/components/ui/button"
 import { useState } from "react"
 import { format } from "date-fns"
+import { useToast } from "@/hooks/use-toast"
 
 export default function HistoryView() {
-  const { history } = usePlanStore()
+  const { history, clearHistory } = usePlanStore()
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null)
+  const { toast } = useToast()
+
+  const handleResetHistory = () => {
+    clearHistory()
+    toast({
+      title: "History cleared",
+      description: "All history entries have been deleted.",
+    })
+  }
 
   if (history.length === 0) {
     return (
@@ -52,14 +63,20 @@ export default function HistoryView() {
     <div className="min-h-screen p-6 max-w-4xl mx-auto">
       {/* Header */}
       <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center">
-            <Calendar className="w-6 h-6 text-white" />
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center">
+              <Calendar className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold text-foreground">History</h1>
+              <p className="text-muted-foreground">Track your progress over time</p>
+            </div>
           </div>
-          <div>
-            <h1 className="text-3xl font-bold text-foreground">History</h1>
-            <p className="text-muted-foreground">Track your progress over time</p>
-          </div>
+          <Button onClick={handleResetHistory} variant="destructive" size="sm">
+            <Trash2 className="w-4 h-4" />
+            Reset History
+          </Button>
         </div>
       </motion.div>
 
@@ -107,7 +124,7 @@ export default function HistoryView() {
               <Card className="overflow-hidden">
                 <button
                   onClick={() => toggleExpand(index)}
-                  className="w-full p-6 text-left hover:bg-surface-secondary/50 transition-colors"
+                  className="w-full p-6 text-left transition-colors"
                 >
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-3">

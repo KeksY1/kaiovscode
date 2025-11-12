@@ -1,11 +1,83 @@
 "use client"
 
+import { useState } from "react"
 import { motion } from "framer-motion"
-import { Info, Sparkles, Target, TrendingUp, Heart, Github, Twitter, Mail } from "lucide-react"
+import { Info, Sparkles, Target, TrendingUp, Heart, Mail, Loader2 } from "lucide-react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Label } from "@/components/ui/label"
+import { useToast } from "@/components/ui/use-toast"
 
 export default function AboutView() {
+  const { toast } = useToast()
+  const [open, setOpen] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [form, setForm] = useState({
+    email: "",
+    subject: "",
+    message: "",
+  })
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { id, value } = e.target
+    setForm((prev) => ({ ...prev, [id]: value }))
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!form.email || !form.subject || !form.message) {
+      toast({
+        variant: "destructive",
+        title: "Missing Fields",
+        description: "Please fill out all fields before sending.",
+      })
+      return
+    }
+    setIsLoading(true)
+
+    try {
+      const response = await fetch("/api/send-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+      })
+
+      const result = await response.json()
+
+      if (response.ok && result.success) {
+        toast({
+          title: "Email Sent!",
+          description: "Thank you for your feedback. We'll get back to you soon.",
+        })
+        setOpen(false) // Close the dialog on success
+        setForm({ email: "", subject: "", message: "" }) // Reset form
+      } else {
+        throw new Error(result.message || "Something went wrong")
+      }
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: error instanceof Error ? error.message : "There was a problem with your request.",
+      })
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   return (
     <div className="min-h-screen p-6 max-w-4xl mx-auto">
       {/* Header */}
@@ -122,26 +194,53 @@ export default function AboutView() {
           <p className="text-sm text-muted-foreground mb-4">
             Have feedback or suggestions? We'd love to hear from you!
           </p>
-          <div className="flex flex-wrap gap-3">
-            <Button variant="outline" asChild>
-              <a href="https://github.com" target="_blank" rel="noopener noreferrer">
-                <Github className="w-4 h-4" />
-                GitHub
-              </a>
-            </Button>
-            <Button variant="outline" asChild>
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
-                <Twitter className="w-4 h-4" />
-                Twitter
-              </a>
-            </Button>
-            <Button variant="outline" asChild>
-              <a href="mailto:hello@kaio.app">
-                <Mail className="w-4 h-4" />
-                Email
-              </a>
-            </Button>
-          </div>
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+              <Button
+                variant="outline"
+                className="bg-primary/10 border-primary/20 hover:bg-primary/20 text-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50"
+              >
+                <Mail className="w-4 h-4 mr-2" />
+                Contact Us
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <form onSubmit={handleSubmit}>
+                <DialogHeader>
+                  <DialogTitle>Contact Us</DialogTitle>
+                  <DialogDescription>
+                    Please fill out the form below. We'll get back to you as soon as possible.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="email" className="text-right">
+                      Email
+                    </Label>
+                    <Input id="email" type="email" value={form.email} onChange={handleInputChange} className="col-span-3" placeholder="you@example.com" />
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="subject" className="text-right">
+                      Subject
+                    </Label>
+                    <Input id="subject" value={form.subject} onChange={handleInputChange} className="col-span-3" placeholder="Feedback for Kaio" />
+                  </div>
+                  <div className="grid grid-cols-4 items-start gap-4">
+                    <Label htmlFor="message" className="text-right pt-2">
+                      Message
+                    </Label>
+                    <Textarea id="message" value={form.message} onChange={handleInputChange} className="col-span-3" placeholder="I have a suggestion..." />
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button type="submit" disabled={isLoading}>
+                    {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    Send Message
+                  </Button>
+                </DialogFooter>
+              </form>
+            </DialogContent>
+          </Dialog>
         </Card>
       </motion.div>
 

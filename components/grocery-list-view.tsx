@@ -151,7 +151,7 @@ export default function GroceryListView() {
               {purchasedItems} of {totalItems} items purchased
             </CardDescription>
             <div className="mt-4">
-              <div className="h-2 bg-muted rounded-full overflow-hidden">
+              <div className="h-2 bg-primary/10 dark:bg-muted rounded-full overflow-hidden">
                 <motion.div
                   className="h-full bg-primary"
                   initial={{ width: 0 }}
@@ -178,7 +178,7 @@ export default function GroceryListView() {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.05 }}
                       className={`flex items-center gap-3 p-3 rounded-lg border transition-colors ${
-                        item.purchased ? "bg-muted/50 border-muted" : "bg-card border-border hover:bg-accent"
+                        item.purchased ? "bg-primary/5 dark:bg-muted/50 border-primary/10 dark:border-muted" : "bg-primary/10 dark:bg-card border-primary/20 dark:border-border hover:bg-primary/20 dark:hover:bg-accent"
                       }`}
                     >
                       <Checkbox

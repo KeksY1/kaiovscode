@@ -2,6 +2,19 @@
 
 import { z } from "zod"
 
+const DEFAULT_FETCH_TIMEOUT = 30000 // 30 seconds
+
+async function fetchWithTimeout(url: string, options: RequestInit = {}, timeout = DEFAULT_FETCH_TIMEOUT) {
+  const controller = new AbortController()
+  const id = setTimeout(() => controller.abort(), timeout)
+  try {
+    const resp = await fetch(url, { ...options, signal: controller.signal })
+    return resp
+  } finally {
+    clearTimeout(id)
+  }
+}
+
 const MealSchema = z.object({
   name: z.string(),
   calories: z.number(),
@@ -50,7 +63,7 @@ export async function generateDailyPlan(goals: string) {
   try {
     console.log("[v0] Calling OpenRouter API with model: openai/gpt-4o-mini")
 
-    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    const response = await fetchWithTimeout("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
@@ -186,6 +199,13 @@ CRITICAL: The "workout" field MUST be a single string with line breaks (\\n), NO
     console.error("[v0] Error type:", error?.constructor?.name)
     console.error("[v0] Error message:", error instanceof Error ? error.message : String(error))
 
+    if ((error as any)?.name === "AbortError") {
+      return {
+        success: false,
+        error: `OpenRouter request timed out after ${DEFAULT_FETCH_TIMEOUT / 1000}s. Please try again.`,
+      }
+    }
+
     return {
       success: false,
       error: error instanceof Error ? error.message : "Failed to generate plan. Please try again.",
@@ -209,7 +229,7 @@ export async function generateWeeklyPlan(goals: string, userNotes?: string) {
 
     const notesContext = userNotes ? `\n\nADDITIONAL NOTES/GOALS:\n${userNotes}\n\nIncorporate these notes into the plan.` : ""
 
-    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    const response = await fetchWithTimeout("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
@@ -373,6 +393,13 @@ CRITICAL: The "workout" field MUST be a single string with line breaks (\\n), NO
     console.error("[v0] Error in generateWeeklyPlan:", error)
     console.error("[v0] Error type:", error?.constructor?.name)
     console.error("[v0] Error message:", error instanceof Error ? error.message : String(error))
+
+    if ((error as any)?.name === "AbortError") {
+      return {
+        success: false,
+        error: `OpenRouter request timed out after ${DEFAULT_FETCH_TIMEOUT / 1000}s. Please try again.`,
+      }
+    }
 
     return {
       success: false,

@@ -36,6 +36,7 @@ export interface GroceryItem {
 
 export interface PlanHistory {
   date: string
+  dayName: string
   plan: DailyPlan
   completedChecklist: boolean[]
   affirmation: string
@@ -89,13 +90,15 @@ interface PlanStore {
   setLastGenerated: (date: string) => void
   toggleChecklistItem: (index: number) => void
   toggleWeeklyChecklistItem: (dayName: string, index: number) => void
-  addToHistory: (plan: DailyPlan, completed: boolean[], affirmation?: string) => void
+  addToHistory: (plan: DailyPlan, completed: boolean[], affirmation?: string, dayName?: string) => void
+  updateTodayHistory: (plan: DailyPlan, completed: boolean[], affirmation?: string, dayName?: string) => void
   checkAndRegeneratePlan: () => boolean
   regenerateWeeklyPlan: () => Promise<void>
   setResetTime: (time: "00:00" | "06:00") => void
   setAutoRegenerateDay: (day: number) => void
   setAutoRegenerateTime: (time: string) => void
   setUserNotes: (notes: string) => void
+  clearHistory: () => void
   clearAllData: () => void
 }
 
@@ -200,11 +203,12 @@ export const usePlanStore = create<PlanStore>()(
           }
         }),
 
-      addToHistory: (plan, completed, affirmation = "Keep it up!") =>
+      addToHistory: (plan, completed, affirmation = "Keep it up!", dayName = "Unknown") =>
         set((state) => ({
           history: [
             {
               date: new Date().toISOString(),
+              dayName,
               plan,
               completedChecklist: completed,
               affirmation,
@@ -213,6 +217,42 @@ export const usePlanStore = create<PlanStore>()(
             ...state.history,
           ].slice(0, 30),
         })),
+
+      updateTodayHistory: (plan, completed, affirmation = "Keep it up!", dayName = "Unknown") =>
+        set((state) => {
+          // Find entry for today with same dayName (Monday, Tuesday, etc.)
+          const today = new Date().toDateString()
+          const existingIndex = state.history.findIndex(
+            (entry) => new Date(entry.date).toDateString() === today && entry.dayName === dayName
+          )
+
+          if (existingIndex !== -1) {
+            // Update existing entry for this day
+            const updated = [...state.history]
+            updated[existingIndex] = {
+              date: updated[existingIndex].date, // Keep original timestamp
+              dayName,
+              plan,
+              completedChecklist: completed,
+              affirmation,
+            }
+            return { history: updated }
+          } else {
+            // Create new entry for this day
+            return {
+              history: [
+                {
+                  date: new Date().toISOString(),
+                  dayName,
+                  plan,
+                  completedChecklist: completed,
+                  affirmation,
+                },
+                ...state.history,
+              ].slice(0, 30),
+            }
+          }
+        }),
 
       checkAndRegeneratePlan: () => {
         const state = get()
@@ -284,6 +324,8 @@ export const usePlanStore = create<PlanStore>()(
       setAutoRegenerateTime: (time) => set({ autoRegenerateTime: time }),
 
       setUserNotes: (notes) => set({ userNotes: notes }),
+
+      clearHistory: () => set({ history: [] }),
 
       clearAllData: () =>
         set({
