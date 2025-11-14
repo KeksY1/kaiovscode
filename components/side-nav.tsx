@@ -7,9 +7,11 @@ import {
   Calendar,
   Settings,
   Info,
-  Sparkles,
   ShoppingCart,
 } from "lucide-react";
+import { useTheme } from "next-themes";
+import Image from "next/image";
+import { useEffect, useState } from "react";
 
 interface SideNavProps {
   activeView:
@@ -25,6 +27,13 @@ interface SideNavProps {
 }
 
 export default function SideNav({ activeView, onViewChange }: SideNavProps) {
+  const { theme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const navItems = [
     { id: "dashboard" as const, icon: Home, label: "Dashboard" },
     { id: "goals" as const, icon: Target, label: "Goals" },
@@ -39,8 +48,23 @@ export default function SideNav({ activeView, onViewChange }: SideNavProps) {
       {/* Logo */}
       <div className="p-6 border-b border-border">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center">
-            <Sparkles className="w-5 h-5 text-white" />
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center">
+            {mounted &&
+              (theme === "dark" ? (
+                <Image
+                  src="/Dark Mode Phoenix.png"
+                  alt="Kaio Logo"
+                  width={40}
+                  height={40}
+                />
+              ) : (
+                <Image
+                  src="/Light Mode Phoenix.png"
+                  alt="Kaio Logo"
+                  width={40}
+                  height={40}
+                />
+              ))}
           </div>
           <div>
             <h1 className="text-xl font-bold text-foreground">Kaio</h1>

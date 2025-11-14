@@ -18,7 +18,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Kaio - AI Life Coach",
   description: "Your personal AI-powered life coach for fitness, nutrition, and lifestyle optimization",
-    generator: 'v0.app'
+    generator: 'v0.app',
+  icons: {
+    icon: "/icon.png",
+    apple: "/icon.png",
+  },
 }
 
 export default function RootLayout({
@@ -29,7 +33,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable}`}>
       <body className="font-sans antialiased">
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           {children}
           <Toaster />
         </ThemeProvider>
