@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Settings, Clock, Trash2, Moon, Sun, AlertTriangle } from "lucide-react"
+import { Settings, Clock, Trash2, Moon, Sun, AlertTriangle, Laptop } from "lucide-react"
 import { usePlanStore } from "@/lib/store"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -68,22 +68,30 @@ export default function SettingsView() {
               <Label htmlFor="theme" className="mb-3 block">
                 Theme
               </Label>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-3 gap-3">
                 <Button
-                  variant={theme === "light" ? "default" : "outline"}
+                  variant="ghost"
                   onClick={() => setTheme("light")}
-                  className="flex flex-col gap-2 h-auto py-4"
+                  className={`flex flex-col gap-2 h-auto py-4 bg-[#d4c5f9] text-black ${theme === "light" ? "bg-[#5893fa] text-black" : ""}`}
                 >
                   <Sun className="w-5 h-5" />
                   <span className="text-sm">Light</span>
                 </Button>
                 <Button
-                  variant={theme === "dark" ? "default" : "outline"}
+                  variant="ghost"
                   onClick={() => setTheme("dark")}
-                  className="flex flex-col gap-2 h-auto py-4"
+                  className={`flex flex-col gap-2 h-auto py-4 bg-[#181818] text-white ${theme === "dark" ? "bg-[#5893fa] text-black" : ""}`}
                 >
                   <Moon className="w-5 h-5" />
                   <span className="text-sm">Dark</span>
+                </Button>
+                <Button
+                  variant="ghost"
+                  onClick={() => setTheme("system")}
+                  className={`flex flex-col gap-2 h-auto py-4 bg-[#fbb41c] text-black ${theme === "system" ? "bg-[#5893fa] text-black" : ""}`}
+                >
+                  <Laptop className="w-5 h-5" />
+                  <span className="text-sm">System</span>
                 </Button>
               </div>
             </div>

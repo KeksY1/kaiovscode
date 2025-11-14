@@ -57,9 +57,23 @@ export default function SideNav({ activeView, onViewChange }: SideNavProps) {
                   width={40}
                   height={40}
                 />
-              ) : (
+              ) : theme === "light" ? (
                 <Image
                   src="/Light Mode Phoenix.png"
+                  alt="Kaio Logo"
+                  width={40}
+                  height={40}
+                />
+              ) : theme === "system" ? (
+                <Image
+                  src="/System Mode Phoenix.png"
+                  alt="Kaio Logo"
+                  width={40}
+                  height={40}
+                />
+              ) : (
+                <Image
+                  src="/icon.png"
                   alt="Kaio Logo"
                   width={40}
                   height={40}
