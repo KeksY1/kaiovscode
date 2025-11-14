@@ -1,7 +1,7 @@
 "use client"
 
 import { create } from "zustand"
-import { persist } from "zustand/middleware"
+import { persist, createJSONStorage } from "zustand/middleware"
 
 export interface Meal {
   name: string
@@ -344,7 +344,7 @@ export const usePlanStore = create<PlanStore>()(
     }),
     {
       name: "kaio-plan-storage",
-      getStorage: () =>
+      storage: createJSONStorage(() =>
         typeof window !== "undefined"
           ? localStorage
           : {
@@ -352,6 +352,7 @@ export const usePlanStore = create<PlanStore>()(
               setItem: () => undefined,
               removeItem: () => undefined,
             },
+      ),
     },
   ),
 )

@@ -412,10 +412,11 @@ export default function DashboardView() {
           <Card className="p-6">
             <h3 className="font-semibold mb-3">Update Your Goals</h3>
             <p className="text-sm text-muted-foreground mb-4">
-              What new skills do you want to master? What new habits do you want to build? Your plan will be updated
-              to reflect these new goals.
+            What new skills do you want to master? What new habits do you want to build? Your plan will be updated to reflect these new goals.</p>
+            <p className="text-sm text-red-400 mb-4">
+              Please do not remove any text from previous goals, Add new goals below unless you intentionally want to delete earlier ones.
             </p>
-            <Textarea
+<Textarea
               value={goalsText}
               onChange={(e) => setGoalsText(e.target.value)}
               placeholder="e.g., I'm going to learn how to cook a new healthy meal every week..."
