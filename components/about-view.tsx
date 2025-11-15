@@ -204,7 +204,7 @@ export default function AboutView() {
                 Contact Us
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px] bg-white dark:bg-zinc-950 solar:bg-popover">
+            <DialogContent className="sm:max-w-[425px] bg-white dark:bg-zinc-950 solar:bg-[#FFE4CC]">
               <form onSubmit={handleSubmit}>
                 <DialogHeader>
                   <DialogTitle>Contact Us</DialogTitle>
