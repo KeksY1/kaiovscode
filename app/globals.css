@@ -110,6 +110,25 @@
   --sidebar-accent-foreground: #2d1810;
   --sidebar-border: #FFCCA3;
   --sidebar-ring: #FF8B3D;
+  --color-background: #FFF5E6;
+  --color-foreground: #2d1810;
+  --color-card: #FFE4CC;
+  --color-card-foreground: #2d1810;
+  --color-popover: #FFE4CC;
+  --color-popover-foreground: #2d1810;
+  --color-primary: #FF8B3D;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #FDB747;
+  --color-secondary-foreground: #2d1810;
+  --color-muted: #FFD7B3;
+  --color-muted-foreground: #5a3d2e;
+  --color-accent: #F77062;
+  --color-accent-foreground: #ffffff;
+  --color-destructive: #ff4d6d;
+  --color-destructive-foreground: #ffffff;
+  --color-border: #FFCCA3;
+  --color-input: #ffffff;
+  --color-ring: #FF8B3D;
 }
 
 @theme inline {
