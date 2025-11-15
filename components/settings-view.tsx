@@ -112,10 +112,13 @@ export default function SettingsView() {
               </p>
               <div className="grid grid-cols-2 gap-4">
                 <Select value={String(autoRegenerateDay)} onValueChange={handleRegenDayChange}>
-                  <SelectTrigger id="regen-day">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
+                  <SelectTrigger
+                  id="regen-day"
+                  style={theme === 'solar' ? { backgroundColor: 'var(--muted)' } : {}}
+                >
+                  <SelectValue />
+                </SelectTrigger>
+                  <SelectContent style={theme === 'solar' ? { backgroundColor: 'var(--popover)', color: 'var(--popover-foreground)' } : {}}>
                     <SelectItem value="0">Sunday</SelectItem>
                     <SelectItem value="1">Monday</SelectItem>
                     <SelectItem value="2">Tuesday</SelectItem>

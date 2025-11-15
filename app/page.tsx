@@ -12,6 +12,8 @@ import BottomNav from "@/components/bottom-nav"
 import SideNav from "@/components/side-nav"
 import { usePlanStore } from "@/lib/store"
 
+export const maxDuration = 300;
+
 export default function Home() {
   const [activeView, setActiveView] = useState<"dashboard" | "goals" | "grocery" | "history" | "settings" | "about">(
     "dashboard",

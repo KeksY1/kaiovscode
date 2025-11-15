@@ -2,7 +2,7 @@
 
 import { z } from "zod"
 
-const DEFAULT_FETCH_TIMEOUT = 30000 // 30 seconds
+const DEFAULT_FETCH_TIMEOUT = 120000 // 2 minutes
 
 async function fetchWithTimeout(url: string, options: RequestInit = {}, timeout = DEFAULT_FETCH_TIMEOUT) {
   const controller = new AbortController()
@@ -126,7 +126,13 @@ CRITICAL: The "workout" field MUST be a single string with line breaks (\\n), NO
     })
 
     if (!response.ok) {
-      const errorText = await response.text()
+      let errorText: string
+      try {
+        errorText = await response.text()
+      } catch (textError) {
+        console.error("[v0] Failed to read error response text:", textError)
+        errorText = `Could not read error message (status: ${response.status})`
+      }
       console.error("[v0] OpenRouter API error:", response.status, errorText)
       return {
         success: false,
@@ -325,7 +331,13 @@ CRITICAL: The "workout" field MUST be a single string with line breaks (\\n), NO
     })
 
     if (!response.ok) {
-      const errorText = await response.text()
+      let errorText: string
+      try {
+        errorText = await response.text()
+      } catch (textError) {
+        console.error("[v0] Failed to read error response text:", textError)
+        errorText = `Could not read error message (status: ${response.status})`
+      }
       console.error("[v0] OpenRouter API error:", response.status, errorText)
       return {
         success: false,
