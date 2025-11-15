@@ -72,7 +72,12 @@ export default function SideNav({ activeView, onViewChange }: SideNavProps) {
                   height={40}
                 />
               ) : (
-                <Image src="/icon.png" alt="Kaio Logo" width={40} height={40} />
+                <Image
+                  src="/System Mode Phoenix.png"
+                  alt="Kaio Logo"
+                  width={40}
+                  height={40}
+                />
               ))}
           </div>
           <div>

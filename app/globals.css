@@ -112,6 +112,41 @@
   --sidebar-ring: #FF8B3D;
 }
 
+.theme-system {
+  --background: #FDFBF7;
+  --foreground: #1C1A1E;
+  --card: #FFFFFF;
+  --card-foreground: #1C1A1E;
+  --popover: #FEF4E5;
+  --popover-foreground: #1C1A1E;
+  --primary: #8028E0;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F7C08D;
+  --secondary-foreground: #1C1A1E;
+  --muted: #F9EBD8;
+  --muted-foreground: #5B4F63;
+  --accent: #C22880;
+  --accent-foreground: #FFFFFF;
+  --destructive: #E5484D;
+  --destructive-foreground: #FFFFFF;
+  --border: #E8DED6;
+  --input: #E8DED6;
+  --ring: #EDAA5C;
+  --chart-1: #F8B76B;
+  --chart-2: #C77DFF;
+  --chart-3: #FF82C3;
+  --chart-4: #6B6B80;
+  --chart-5: #FFD972;
+  --sidebar: #1F1A2B;
+  --sidebar-foreground: #FCE5CF;
+  --sidebar-primary: #D892FF;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #F9C787;
+  --sidebar-accent-foreground: #1C1A1E;
+  --sidebar-border: #2E203E;
+  --sidebar-ring: #D892FF;
+}
+
 @theme inline {
   /* optional: --font-sans, --font-serif, --font-mono if they are applied in the layout.tsx */
   --font-sans: "Geist", "Geist Fallback", system-ui, -apple-system, sans-serif;

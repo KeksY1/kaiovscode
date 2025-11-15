@@ -72,7 +72,7 @@ export default function SettingsView() {
                 <Button
                   variant="ghost"
                   onClick={() => setTheme("light")}
-                  className={`flex flex-col gap-2 h-auto py-4 bg-[#d4c5f9] text-black ${theme === "light" ? "bg-[#5893fa] text-black" : ""}`}
+                  className={`flex flex-col gap-2 h-auto py-4 bg-gradient-to-br from-[#E8D5FF] via-[#D4C5F9] to-[#C4B0F0] text-[#3D2E6B] ${theme === "light" ? "ring-2 ring-[#8B5CF6]" : ""}`}
                 >
                   <Sun className="w-5 h-5" />
                   <span className="text-sm">Light</span>
@@ -80,8 +80,7 @@ export default function SettingsView() {
                 <Button
                   variant="ghost"
                   onClick={() => setTheme("dark")}
-                  className={`flex flex-col gap-2 h-auto py-4 bg-[#181818] text-white ${theme === "dark" ? "bg-[#5893fa] text-black" : ""}`}
-                >
+                  className={`flex flex-col gap-2 h-auto py-4 bg-gradient-to-br from-[#2a2a2a] via-[#1a1a1a] to-[#0f0f0f] text-white ${theme === "dark" ? "ring-2 ring-[#fc0000]" : ""}`}                >
                   <Moon className="w-5 h-5" />
                   <span className="text-sm">Dark</span>
                 </Button>
