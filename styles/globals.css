@@ -2,6 +2,7 @@
 @import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
+@custom-variant solar (&:is(.solar *));
 
 :root {
   --background: oklch(96% 0.04 285);
@@ -40,8 +41,7 @@
 }
 
 .dark {
-  --background: #fc0000;
-  /* CHANGED: Dark mode background to dark grey (#2a2a2a) */
+  --background: #181818;
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.145 0 0);
   --card-foreground: oklch(0.985 0 0);
@@ -65,7 +65,7 @@
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.24 0.01 270);
+  --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
   --sidebar-primary: oklch(0.488 0.243 264.376);
   --sidebar-primary-foreground: oklch(0.985 0 0);
@@ -73,6 +73,41 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(0.269 0 0);
   --sidebar-ring: oklch(0.439 0 0);
+}
+
+.solar {
+  --background: #FDD379;
+  --foreground: #3d2517;
+  --card: #FFD972;
+  --card-foreground: #2a1810;
+  --popover: #ffffff;
+  --popover-foreground: #2a1810;
+  --primary: #c77dff;
+  --primary-foreground: #ffffff;
+  --secondary: #FACA84;
+  --secondary-foreground: #2a1810;
+  --muted: #F9C787;
+  --muted-foreground: #6b4423;
+  --accent: #ff6b9d;
+  --accent-foreground: #ffffff;
+  --destructive: #ff4d6d;
+  --destructive-foreground: #ffffff;
+  --border: #F8C28C;
+  --input: #fff5e6;
+  --ring: #c77dff;
+  --chart-1: #c77dff;
+  --chart-2: #ff6b9d;
+  --chart-3: #FBCD80;
+  --chart-4: #e0aaff;
+  --chart-5: #ffd60a;
+  --sidebar: #FBCD80;
+  --sidebar-foreground: #2a1810;
+  --sidebar-primary: #c77dff;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #F7C08D;
+  --sidebar-accent-foreground: #2a1810;
+  --sidebar-border: #F9C787;
+  --sidebar-ring: #c77dff;
 }
 
 @theme inline {

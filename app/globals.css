@@ -2,6 +2,7 @@
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
+@custom-variant solar (&:is(.solar *));
 
 :root {
   --background: oklch(96% 0.04 285);
@@ -76,38 +77,38 @@
 }
 
 .solar {
-  --background: #FBCD80;
-  --foreground: #2a1810;
-  --card: #FDD379;
+  --background: #FDD379;
+  --foreground: #3d2517;
+  --card: #FFD972;
   --card-foreground: #2a1810;
-  --popover: #FFD972;
+  --popover: #ffffff;
   --popover-foreground: #2a1810;
   --primary: #c77dff;
   --primary-foreground: #ffffff;
-  --secondary: #F9C787;
-  --secondary-foreground: #3d2517;
-  --muted: #F7C08D;
-  --muted-foreground: #5a3d2e;
-  --accent: #e0aaff;
-  --accent-foreground: #2a1810;
-  --destructive: #ff6b9d;
+  --secondary: #FACA84;
+  --secondary-foreground: #2a1810;
+  --muted: #F9C787;
+  --muted-foreground: #6b4423;
+  --accent: #ff6b9d;
+  --accent-foreground: #ffffff;
+  --destructive: #ff4d6d;
   --destructive-foreground: #ffffff;
   --border: #F8C28C;
-  --input: #FACA84;
+  --input: #fff5e6;
   --ring: #c77dff;
   --chart-1: #c77dff;
   --chart-2: #ff6b9d;
-  --chart-3: #ffd60a;
-  --chart-4: #06ffa5;
-  --chart-5: #e0aaff;
-  --radius: 0.625rem;
-  --sidebar: #F9C787;
+  --chart-3: #FBCD80;
+  --chart-4: #e0aaff;
+  --chart-5: #ffd60a;
+  --radius: 0.75rem;
+  --sidebar: #FBCD80;
   --sidebar-foreground: #2a1810;
   --sidebar-primary: #c77dff;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #e0aaff;
+  --sidebar-accent: #F7C08D;
   --sidebar-accent-foreground: #2a1810;
-  --sidebar-border: #F8C28C;
+  --sidebar-border: #F9C787;
   --sidebar-ring: #c77dff;
 }
 
