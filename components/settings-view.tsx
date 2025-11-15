@@ -87,11 +87,11 @@ export default function SettingsView() {
                 </Button>
                 <Button
                   variant="ghost"
-                  onClick={() => setTheme("system")}
-                  className={`flex flex-col gap-2 h-auto py-4 bg-[#fbb41c] text-black ${theme === "system" ? "bg-[#5893fa] text-black" : ""}`}
+                  onClick={() => setTheme("solar")}
+                  className={`flex flex-col gap-2 h-auto py-4 bg-gradient-to-br from-[#FFD972] via-[#F9C787] to-[#e0aaff] text-black ${theme === "solar" ? "ring-2 ring-[#c77dff] ring-offset-2" : ""}`}
                 >
-                  <Laptop className="w-5 h-5" />
-                  <span className="text-sm">System</span>
+                  <Sun className="w-5 h-5" />
+                  <span className="text-sm font-semibold">Solar</span>
                 </Button>
               </div>
             </div>
