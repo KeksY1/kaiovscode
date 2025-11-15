@@ -76,38 +76,38 @@
 }
 
 .solar {
-  --background: #FDD379;
-  --foreground: #3d2517;
-  --card: #FFD972;
-  --card-foreground: #2a1810;
-  --popover: #ffffff;
-  --popover-foreground: #2a1810;
-  --primary: #c77dff;
+  --background: #FFF5E6;
+  --foreground: #2d1810;
+  --card: #FFE4CC;
+  --card-foreground: #2d1810;
+  --popover: #FFE4CC;
+  --popover-foreground: #2d1810;
+  --primary: #FF8B3D;
   --primary-foreground: #ffffff;
-  --secondary: #FACA84;
-  --secondary-foreground: #2a1810;
-  --muted: #F9C787;
-  --muted-foreground: #6b4423;
-  --accent: #ff6b9d;
+  --secondary: #FDB747;
+  --secondary-foreground: #2d1810;
+  --muted: #FFD7B3;
+  --muted-foreground: #5a3d2e;
+  --accent: #F77062;
   --accent-foreground: #ffffff;
   --destructive: #ff4d6d;
   --destructive-foreground: #ffffff;
-  --border: #F8C28C;
-  --input: #fff5e6;
-  --ring: #c77dff;
-  --chart-1: #c77dff;
-  --chart-2: #ff6b9d;
-  --chart-3: #FBCD80;
-  --chart-4: #e0aaff;
-  --chart-5: #ffd60a;
-  --sidebar: #FBCD80;
-  --sidebar-foreground: #2a1810;
-  --sidebar-primary: #c77dff;
+  --border: #FFCCA3;
+  --input: #ffffff;
+  --ring: #FF8B3D;
+  --chart-1: #FF8B3D;
+  --chart-2: #F77062;
+  --chart-3: #FDB747;
+  --chart-4: #FFB976;
+  --chart-5: #3D4C6B;
+  --sidebar: #FFD7B3;
+  --sidebar-foreground: #2d1810;
+  --sidebar-primary: #FF8B3D;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #F7C08D;
-  --sidebar-accent-foreground: #2a1810;
-  --sidebar-border: #F9C787;
-  --sidebar-ring: #c77dff;
+  --sidebar-accent: #FFE4CC;
+  --sidebar-accent-foreground: #2d1810;
+  --sidebar-border: #FFCCA3;
+  --sidebar-ring: #FF8B3D;
 }
 
 @theme inline {
