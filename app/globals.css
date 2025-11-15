@@ -78,38 +78,38 @@
 
 .solar {
   --background: #FDD379;
-  --foreground: #3d2517;
-  --card: #FFD972;
+  --foreground: #2a1810;
+  --card: #FACA84;
   --card-foreground: #2a1810;
-  --popover: #ffffff;
+  --popover: #FACA84;
   --popover-foreground: #2a1810;
-  --primary: #c77dff;
+  --primary: #9d4edd;
   --primary-foreground: #ffffff;
-  --secondary: #FACA84;
+  --secondary: #F7C08D;
   --secondary-foreground: #2a1810;
   --muted: #F9C787;
-  --muted-foreground: #6b4423;
-  --accent: #ff6b9d;
-  --accent-foreground: #ffffff;
-  --destructive: #ff4d6d;
+  --muted-foreground: #5a3d2e;
+  --accent: #c77dff;
+  --accent-foreground: #2a1810;
+  --destructive: #ff6b9d;
   --destructive-foreground: #ffffff;
   --border: #F8C28C;
-  --input: #fff5e6;
-  --ring: #c77dff;
-  --chart-1: #c77dff;
+  --input: #FFD972;
+  --ring: #9d4edd;
+  --chart-1: #9d4edd;
   --chart-2: #ff6b9d;
   --chart-3: #FBCD80;
-  --chart-4: #e0aaff;
+  --chart-4: #c77dff;
   --chart-5: #ffd60a;
   --radius: 0.75rem;
   --sidebar: #FBCD80;
   --sidebar-foreground: #2a1810;
-  --sidebar-primary: #c77dff;
+  --sidebar-primary: #9d4edd;
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #F7C08D;
   --sidebar-accent-foreground: #2a1810;
-  --sidebar-border: #F9C787;
-  --sidebar-ring: #c77dff;
+  --sidebar-border: #F8C28C;
+  --sidebar-ring: #9d4edd;
 }
 
 @theme inline {
